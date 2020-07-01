@@ -4,6 +4,7 @@ let cenas;
 
 let imgCenario;
 let imgPersonagem;
+let imgPersonagemInverse;
 let imgShips;
 let imgGameover;
 let imgSplash;
@@ -15,3 +16,5 @@ let fontTelaInicial;
 let somFundo, somPulo;
 
 let botao;
+
+let fita;
