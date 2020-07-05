@@ -4,6 +4,7 @@ class Jogo extends Cena {
 
         this.mapa = fita.mapa;
 
+        this.mobile = new Mobile();
         this.cenario = new Cenario(imgCenario, 5);
         this.pontuacao;        
 
@@ -11,6 +12,7 @@ class Jogo extends Cena {
         this.personagem.defineSprites(288, 128, 3, 5);
 
         this.fimDoJogo = false;
+        this.pausado = false;
         
         this.inimigos = [];
 
@@ -48,41 +50,92 @@ class Jogo extends Cena {
         this.inimigos.push(nave3);
         this.inimigos.push(nave4);
 
+        this.mobile.setup();
     }
 
     keyPressed() {
-        if (key === 'W' || key === 'w' || key === 'ArrowUp') {
-            this.personagem.pula();
+        if (keyIsDown(80) || keyIsDown(19)) {
+            this.pausa();
         }
-        if (key === 'S' || key === 's' || key === 'ArrowDown') {
-            this.personagem.desce();
+        else if (keyCode == 87 || keyCode == UP_ARROW) {
+            this.personagem.sobe(1);
         }
-        if (key === ' ' || key == 'ArrowRight') {
-            this.personagem.atira();
+        else if (keyCode == 83 || keyCode == DOWN_ARROW) {
+            this.personagem.desce(1);
+        }
+        else if (keyCode == 32 || keyCode == RIGHT_ARROW) {
+            this.personagem.atira(1);
         }
         if (this.fimDoJogo) {
             if (key === 'Escape' || key === 'Enter') {
                 this.start();
                 loop();
-            } else {
-                console.log(key);
             }
         }
     }
 
+    keyReleased() {
+        if (keyCode == 87 || keyCode == UP_ARROW) {
+            this.personagem.sobe(-1);
+        }
+        else if (keyCode == 83 || keyCode == DOWN_ARROW) {
+            this.personagem.desce(-1);
+        }
+        else if (keyCode == 32 || keyCode == RIGHT_ARROW) {
+            this.personagem.atira(-1);
+        }
+    }
+
+    checkKeyDown() {
+        if (keyIsDown(80) || keyIsDown(19)) {
+            this.pausa();
+        }
+        else if (keyIsDown(87) || keyIsDown(UP_ARROW)) {
+            this.personagem.sobe(2);
+        }
+        else if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) {
+            this.personagem.desce(2);
+        }
+        else if (keyIsDown(32) || keyIsDown(RIGHT_ARROW)) {
+            this.personagem.atira();
+        }
+    }
+
     draw() {
+        background(0, 100, 200);
+
+        //console.log(width, height);
+
+        this.mobile.draw();
 
         this.cenario.exibe();
-        this.cenario.move();
 
         this.vida.draw();
         //this.testeColisao();
 
         this.pontuacao.exibe();
-        this.pontuacao.adicionarPontos();
+
+        //this.exibeEstatisticas();
 
         this.personagem.exibe();
-        this.personagem.aplicaGravidade();
+
+        if(this.pausado || !focused) {
+            textAlign(CENTER);
+            fill('#ff0');
+            textSize(50);
+            text("PAUSA", width / 2, height /2 - 50);
+
+            return;
+        }
+
+        const contador = parseInt(getFrameRate()/5);
+        if(frameCount % contador == 0) {
+            this.checkKeyDown();
+        }
+        
+        this.cenario.move();
+        this.pontuacao.adicionarPontos();
+        this.personagem.move();
 
         //const linhaAtual = this.mapa[this.indice];
         //const inimigo = this.inimigos[linhaAtual.inimigo];
@@ -144,6 +197,21 @@ class Jogo extends Cena {
         }
     }
 
+    resize() {
+        this.cenario.resize();
+    }
+
+    pausa() {
+        this.pausado = !this.pausado;
+        if(this.pausado) {
+            noLoop();
+            somFundo.stop();
+        } else {
+            somFundo.play();
+            loop();
+        }
+    }
+
     gameOver() {
         image(imgGameover, width / 2 - 206, height / 2 - 39);
 
@@ -156,6 +224,15 @@ class Jogo extends Cena {
         somFundo.stop();
         noLoop();
     }
+
+    
+    exibeEstatisticas() {
+        textAlign(RIGHT);
+        fill('#ff0');
+        textSize(50);
+        text(this.personagem.estatistica(), width - 30, 100)
+    }
+
 
     testeColisao() {
         //background(255);
