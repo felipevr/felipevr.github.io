@@ -125,7 +125,8 @@ code {
   box-sizing: border-box;
   text-align: center;
   font-size: 18px;
-  width: 45%;
+  min-width: 200px;
+  width: 50%;
   padding: 16px 24px;
   background: rgba(44, 37, 44, 0.8);
   border: 1px solid #7f797f;
