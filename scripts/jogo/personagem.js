@@ -81,6 +81,9 @@ class Personagem extends Animacao {
             this.atirando = false;
             this.spriteDeslocamentoX = 0;
         }, 1000);
+
+        let p = new Projetil(this.x+this.largura,this.y + this.altura - 30,5,5,10);
+        return p;
     }
 
     move() {
@@ -104,8 +107,8 @@ class Personagem extends Animacao {
             this.aceleracao = 0;
         }
 
-        if (this.y <= 55) {
-            this.y = 55;
+        if (this.y <= 65) {
+            this.y = 65;
             this.velocidadeMovimento = 0;
             this.aceleracao = 0;
         }

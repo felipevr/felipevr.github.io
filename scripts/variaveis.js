@@ -18,6 +18,3 @@ let somFundo, somPulo;
 let botao;
 
 let fita;
-
-var x, y, z;
-var xpos, ypos;
